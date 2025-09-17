@@ -4,9 +4,10 @@ require '../../../vendor/autoload.php';
 require 'config/database.php';
 $conn = new mysqli("localhost:3307", "root", "", "tm");
 
-// Access control
-if (!isset($_SESSION['role']) || $_SESSION['role'] != 'admin') {
-    die("Access denied. Admins only.");
+// Access granted for all logged-in users
+if (!isset($_SESSION['user_id'])) {
+    header("Location: ../../../login.php");
+    exit();
 }
 ?>
 

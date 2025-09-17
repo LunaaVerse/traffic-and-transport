@@ -38,10 +38,7 @@ try {
     $user_profile = ['full_name' => 'User', 'role' => 'Unknown'];
 }
 
-// Check if user is Admin
-if ($user_profile['role'] !== 'admin') {
-    die("Access Denied. Admins only.");
-}
+// Access granted for all logged-in users
 
 // SweetAlert messages
 $alert = "";

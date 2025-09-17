@@ -1,11 +1,9 @@
 <?php
 // diversion_planning_map_update.php
 session_start();
-if(!isset($_SESSION['role']) || $_SESSION['role'] != 'Admin'){
-    echo "<script>
-            alert('Access Denied. Admins Only.');
-            window.location.href='index.php';
-          </script>";
+// Access granted for all logged-in users
+if (!isset($_SESSION['user_id'])) {
+    header("Location: ../../../login.php");
     exit();
 }
 

@@ -2,13 +2,10 @@
 // AI Rule Management - Single PHP Page with Search & Pagination
 session_start();
 
-// Restrict access to Admin only
-if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'Admin') {
-    echo "<script>
-            alert('Access Denied: Admins Only');
-            window.location.href='login.php';
-          </script>";
-    exit;
+// Access granted for all logged-in users
+if (!isset($_SESSION['user_id'])) {
+    header("Location: ../../../login.php");
+    exit();
 }
 
 // Database connection

@@ -28,7 +28,7 @@ $databases = [
     'rtr' => [
         'host' => 'localhost',
         'name' => 'ttm_rtr',
-        'user' => 'rottm_rtr',
+        'user' => 'ttm_rtr',
         'pass' => 'Admin123'
     ],
     'tm' => [

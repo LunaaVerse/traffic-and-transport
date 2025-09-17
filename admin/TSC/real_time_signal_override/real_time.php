@@ -1,14 +1,10 @@
 <?php
 // real_time_signal_override_dashboard.php
 session_start();
-
-// Admin-only access
-if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'Admin') {
-    echo "<script>
-            alert('Access Denied: Admins Only');
-            window.location.href='login.php';
-          </script>";
-    exit;
+// Access granted for all logged-in users
+if (!isset($_SESSION['user_id'])) {
+    header("Location: ../../login.php");
+    exit();
 }
 
 // Database connection

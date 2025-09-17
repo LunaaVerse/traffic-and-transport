@@ -1,7 +1,8 @@
 <?php
 session_start();
-if(!isset($_SESSION['role']) || $_SESSION['role']!='Admin'){
-    echo "<script>alert('Access Denied.'); window.location='index.php';</script>";
+// Access granted for all logged-in users
+if (!isset($_SESSION['user_id'])) {
+    header("Location: ../../login.php");
     exit();
 }
 

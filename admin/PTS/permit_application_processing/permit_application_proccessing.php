@@ -1,9 +1,10 @@
 <?php
 session_start();
 require_once 'config/database.php';
-// --------- ADMIN ACCESS ONLY ---------
-if(!isset($_SESSION['role']) || $_SESSION['role'] != 'admin'){
-    die("Access denied. Admins only.");
+// Access granted for all logged-in users
+if (!isset($_SESSION['user_id'])) {
+    header("Location: ../login.php");
+    exit();
 }
 
 // --------- DATABASE CONNECTION ---------
