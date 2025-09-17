@@ -1,0 +1,156 @@
+    <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <img src="../../img/FRSM.png" alt="Logo">
+                <div class="text">
+                    Quezon City<br>
+                    <small>Traffic Management System</small>
+                </div>
+            </div>
+            
+            <div class="sidebar-menu">
+                <div class="sidebar-section">Main Navigation</div>
+                <a href="../dashboard/dashboard.php" class="sidebar-link">
+                    <i class='bx bx-home'></i>
+                    <span class="text">Dashboard</span>
+                </a>
+
+                <!-- Traffic Monitoring with Dropdown -->
+                <div class="sidebar-section mt-4">Traffic Modules</div>
+                <div class="dropdown-toggle sidebar-link active" data-bs-toggle="collapse" data-bs-target="#tmDropdown" aria-expanded="true">
+                    <i class='bx bx-traffic-cone'></i>
+                    <span class="text">Traffic Monitoring</span>
+                </div>
+                <div class="sidebar-dropdown collapse show" id="tmDropdown">
+                    <a href="../dashboard/dashboard.php" class="sidebar-dropdown-link">
+                        <i class='bx bx-clipboard'></i> Dashboard
+                    </a>
+                    <a href="../manual_logs/admin_traffic_log.php" class="sidebar-dropdown-link">
+                        <i class='bx bx-clipboard'></i> Manual Traffic Logs
+                    </a>
+                    <a href="../traffic_volume/tvl.php" class="sidebar-dropdown-link active">
+                        <i class='bx bx-signal-4'></i> Traffic Volume Status
+                    </a>
+                    <a href="../daily_monitoring/dmr.php" class="sidebar-dropdown-link">
+                        <i class='bx bx-report'></i> Daily Monitoring Reports
+                    </a>
+                     <a href="../cctv_integration/admin_cctv.php" class="sidebar-dropdown-link">
+                        <i class='bx bx-report'></i> CCTV Integration
+                    </a>
+                </div>
+
+                <!-- Real-time Road Update with Dropdown -->
+                <div class="dropdown-toggle sidebar-link" data-bs-toggle="collapse" data-bs-target="#rruDropdown" aria-expanded="false">
+                    <i class='bx bx-road'></i>
+                    <span class="text">Real-time Road Update</span>
+                </div>
+                <div class="sidebar-dropdown collapse" id="rruDropdown">
+                    <a href="../../RTR/admin_post/apd.php" class="sidebar-dropdown-link">
+                        <i class='bx bx-edit'></i> Admin Post Dashboard
+                    </a>
+                    <a href="../../RTR/road_status/rso.php" class="sidebar-dropdown-link">
+                        <i class='bx bx-stats'></i> Road Status Options
+                    </a>
+                    <a href="../../RTR/notification_panel/np.php" class="sidebar-dropdown-link">
+                        <i class='bx bx-bell'></i> Notification Panel
+                    </a>
+                </div>
+
+                <!-- Accident & Violation Report with Dropdown -->
+                <div class="dropdown-toggle sidebar-link" data-bs-toggle="collapse" data-bs-target="#avrDropdown" aria-expanded="false">
+                    <i class='bx bx-error-circle'></i>
+                    <span class="text">Accident & Violation Report</span>
+                </div>
+                <div class="sidebar-dropdown collapse" id="avrDropdown">
+                    <a href="../../AVR/report_review/rr.php" class="sidebar-dropdown-link">
+                        <i class='bx bx-search-alt'></i> Report Review
+                    </a>
+                    <a href="../../AVR/status_update/su.php" class="sidebar-dropdown-link">
+                        <i class='bx bx-task'></i> Status Update
+                    </a>
+                    <a href="../../AVR/violation_history/vh.php" class="sidebar-dropdown-link">
+                        <i class='bx bx-history'></i> Violation History
+                    </a>
+                </div>
+          <!-- Vehicle Routing & Diversion with Dropdown -->
+                <div class="dropdown-toggle sidebar-link <?= $active_tab == 'routing_diversion' ? 'active' : '' ?>" data-bs-toggle="collapse" data-bs-target="#vrdDropdown" aria-expanded="<?= $active_tab == 'routing_diversion' ? 'true' : 'false' ?>">
+                    <i class='bx bx-map-alt'></i>
+                    <span class="text">Vehicle Routing & Diversion</span>
+                </div>
+                <div class="sidebar-dropdown collapse <?= $active_tab == 'routing_diversion' ? 'show' : '' ?>" id="vrdDropdown">
+                    <a href="../../VRD/route_suggestion/rs.php" class="sidebar-dropdown-link">
+                        <i class='bx bx-directions'></i> Route Suggestions
+                    </a>
+                    <a href="../../VRD/diversion_notice/dn.php" class="sidebar-dropdown-link active">
+                        <i class='bx bx-notification'></i> Diversion Notice Board
+                    </a>
+                    <a href="../../VRD/route_update/ru.php" class="sidebar-dropdown-link">
+                        <i class='bx bx-edit-alt'></i> Route Update Form
+                    </a>
+                    <a href="../../VRD/manage_route/mr.php" class="sidebar-dropdown-link">
+                        <i class='bx bx-check-circle'></i> Manage Route Suggestions
+                    </a>
+                </div>
+
+                <!-- Traffic Signal Control with Dropdown -->
+                <div class="dropdown-toggle sidebar-link" data-bs-toggle="collapse" data-bs-target="#tscDropdown" aria-expanded="false">
+                    <i class='bx bx-traffic-light'></i>
+                    <span class="text">Traffic Signal Control</span>
+                </div>
+                <div class="sidebar-dropdown collapse" id="tscDropdown">
+                    <a href="../../TSC/simulated_signal/ssl.php" class="sidebar-dropdown-link">
+                        <i class='bx bx-slider-alt'></i> Signal Control Interface
+                    </a>
+                    <a href="../../TSC/manual_timing/mt.php" class="sidebar-dropdown-link">
+                        <i class='bx bx-time-five'></i> Manual Timing Adjuster
+                    </a>
+                    <a href="../../TSC/simple_schedule/ss.php" class="sidebar-dropdown-link">
+                        <i class='bx bx-calendar'></i> Schedule Viewer
+                    </a>
+                </div>
+
+                <!-- Public Transport with Dropdown -->
+                <div class="dropdown-toggle sidebar-link" data-bs-toggle="collapse" data-bs-target="#ptsDropdown" aria-expanded="false">
+                    <i class='bx bx-bus'></i>
+                    <span class="text">Public Transport</span>
+                </div>
+                <div class="sidebar-dropdown collapse" id="ptsDropdown">
+                    <a href="../../PTS/vehicle_timetable/vt.php" class="sidebar-dropdown-link">
+                        <i class='bx bx-table'></i> Vehicle Timetable
+                    </a>
+                    <a href="../../PTS/arrival_estimator/ae.php" class="sidebar-dropdown-link">
+                        <i class='bx bx-time'></i> Arrival Estimator
+                    </a>
+                    <a href="../../PTS/commuter_info/ci.php" class="sidebar-dropdown-link">
+                        <i class='bx bx-info-circle'></i> Commuter Info Page
+                    </a>
+                </div>
+
+                <!-- Permit & Ticketing System with Dropdown -->
+                <div class="dropdown-toggle sidebar-link" data-bs-toggle="collapse" data-bs-target="#patsDropdown" aria-expanded="false">
+                    <i class='bx bx-receipt'></i>
+                    <span class="text">Permit & Ticketing System</span>
+                </div>
+                <div class="sidebar-dropdown collapse" id="patsDropdown">
+                    <a href="../../PATS/permit_request/pr.php" class="sidebar-dropdown-link">
+                        <i class='bx bx-file'></i> Permit Requests
+                    </a>
+                    <a href="../../PATS/ticket_log/tl.php" class="sidebar-dropdown-link">
+                        <i class='bx bx-list-check'></i> Ticket Log System
+                    </a>
+                    <a href="../../PATS/status_view/sv.php" class="sidebar-dropdown-link">
+                        <i class='bx bx-show'></i> Status View
+                    </a>
+                </div>
+                
+                <div class="sidebar-section mt-4">User</div>
+                <a href="../profile.php" class="sidebar-link">
+                    <i class='bx bx-user'></i>
+                    <span class="text">Profile</span>
+                </a>
+                <a href="../logout.php" class="sidebar-link">
+                    <i class='bx bx-log-out'></i>
+                    <span class="text">Logout</span>
+                </a>
+            </div>
+        </div>
