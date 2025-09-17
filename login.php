@@ -1,11 +1,12 @@
 <?php
+// Start session with secure settings
 session_start([
     'cookie_lifetime' => 86400,
-    'cookie_secure'   => true,
+    'cookie_secure'   => false, // Set to true in production with HTTPS
     'cookie_httponly' => true,
     'use_strict_mode' => true
 ]);
-require_once 'config/database.php';
+require_once 'database.php'; // Changed from config/database.php
 require_once 'vendor/autoload.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
@@ -51,30 +52,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['forgot_password'])) {
                 // Send reset email using PHPMailer
                 $mail = new PHPMailer(true);
                 try {
-                    // SMTP configuration should be set in your environment or config file
-                    // For production, use environment variables or a config file
                     $mail->isSMTP();
-                    $mail->Host = getenv('SMTP_HOST') ?: 'smtp.gmail.com';
+                    $mail->Host = 'smtp.gmail.com';
                     $mail->SMTPAuth = true;
-                    $mail->Username = getenv('SMTP_USER') ?: 'your-email@domain.com';
-                    $mail->Password = getenv('SMTP_PASS') ?: 'your-app-password';
-                    $mail->SMTPSecure = defined('PHPMailer::ENCRYPTION_STARTTLS') ? PHPMailer::ENCRYPTION_STARTTLS : 'tls';
-                    $mail->Port = getenv('SMTP_PORT') ?: 587;
+                    $mail->Username = 'your-email@gmail.com'; // Replace with your email
+                    $mail->Password = 'your-app-password'; // Replace with your app password
+                    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+                    $mail->Port = 587;
                     
-                    $mail->setFrom(getenv('SMTP_FROM_EMAIL') ?: 'noreply@yourdomain.com', getenv('SMTP_FROM_NAME') ?: 'TTM System');
+                    $mail->setFrom('noreply@ttm.com', 'TTM System');
                     $mail->addAddress($email, $user['full_name']);
                     
                     $mail->isHTML(true);
                     $mail->Subject = 'Password Reset Request - TTM';
-                    $resetLink = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . $_SERVER['HTTP_HOST'] . "/reset_password.php?token=" . $token;
-                    $mail->Body = "
-                        <h2>Password Reset Request</h2>
-                        <p>Hello {$user['full_name']},</p>
-                        <p>You requested a password reset for your TTM account. Click the link below to reset your password:</p>
-                        <p><a href='$resetLink'>Reset Password</a></p>
-                        <p>This link will expire in 1 hour.</p>
-                        <p>If you didn't request this, please ignore this email.</p>
-                    ";
+                    $resetLink = "https://" . $_SERVER['HTTP_HOST'] . "/reset_password.php?token=" . $token;
+                    $mail->Body = '
+                        <div style="background:linear-gradient(135deg,#2563EB 0%,#1D4ED8 50%,#1E40AF 100%);padding:40px 0;">
+                            <div style="max-width:480px;margin:0 auto;background:#fff;border-radius:16px;box-shadow:0 10px 15px -3px rgba(0,0,0,0.1),0 4px 6px -2px rgba(0,0,0,0.05);padding:32px;font-family:\'Inter\',Segoe UI,sans-serif;">
+                                <div style="text-align:center;margin-bottom:24px;">
+                                    <img src="https://' . $_SERVER['HTTP_HOST'] . '/img/ttm.png" alt="TTM Logo" style="width:80px;height:80px;border-radius:50%;box-shadow:0 4px 6px -1px rgba(0,0,0,0.1),0 2px 4px -1px rgba(0,0,0,0.06);margin-bottom:16px;">
+                                    <h2 style="font-size:22px;font-weight:700;color:#2563EB;margin-bottom:8px;">Password Reset Request</h2>
+                                </div>
+                                <p style="font-size:16px;color:#374151;margin-bottom:18px;">Hello <b>' . htmlspecialchars($user['full_name']) . '</b>,</p>
+                                <p style="font-size:15px;color:#374151;margin-bottom:18px;">
+                                    You requested a password reset for your TTM account.<br>
+                                    Click the button below to reset your password:
+                                </p>
+                                <div style="text-align:center;margin:32px 0;">
+                                    <a href="' . $resetLink . '" style="display:inline-block;padding:14px 32px;background:linear-gradient(45deg,#3B82F6 0%,#2563EB 100%);color:#fff;font-weight:600;font-size:16px;border-radius:10px;text-decoration:none;box-shadow:0 4px 6px -1px rgba(0,0,0,0.1);transition:background 0.3s;">
+                                        Reset Password
+                                    </a>
+                                </div>
+                                <p style="font-size:14px;color:#6B7280;margin-bottom:12px;">This link will expire in <b>1 hour</b>.</p>
+                                <p style="font-size:14px;color:#6B7280;">If you didn\'t request this, please ignore this email.</p>
+                                <hr style="margin:32px 0;border:none;border-top:1px solid #E5E7EB;">
+                                <div style="text-align:center;font-size:13px;color:#9CA3AF;">
+                                    &copy; ' . date('Y') . ' Traffic and Transport Management
+                                </div>
+                            </div>
+                        </div>
+                    ';
                     
                     $mail->send();
                     $forgotPasswordMessage = "Password reset link sent to your email";
@@ -162,7 +179,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
                                          VALUES (?, ?, FROM_UNIXTIME(?))");
                             $insertStmt->execute([$user['user_id'], $hashedToken, $expiry]);
                             
-                            setcookie('remember_me', $user['user_id'] . ':' . $token, $expiry, "/", "", true, true);
+                            setcookie('remember_me', $user['user_id'] . ':' . $token, $expiry, "/", "", false, true);
                         }
                         
                         // Reset login attempts
@@ -173,11 +190,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
                         
                         // Check user role and redirect accordingly
                         if (in_array($user['role'], ['admin', 'officer', 'operator'])) {
-                            // Employee dashboard
+                            // Admin dashboard
                             header("Location: admin/dashboard.php");
                         } else {
                             // Citizen dashboard
-                            header("Location: employee/index.php");
+                            header("Location: dashboard.php");
                         }
                         exit();
                     }
@@ -231,11 +248,11 @@ if (empty($_SESSION['user_id']) && isset($_COOKIE['remember_me'])) {
             
             // Check user role and redirect accordingly
             if (in_array($user['role'], ['admin', 'officer', 'operator'])) {
-                // Employee dashboard
+                // Admin dashboard
                 header("Location: admin/dashboard.php");
             } else {
                 // Citizen dashboard
-                header("Location: employee/index.php");
+                header("Location: dashboard.php");
             }
             exit();
         }
@@ -256,7 +273,7 @@ if (empty($_SESSION['user_id']) && isset($_COOKIE['remember_me'])) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        /* Your CSS remains the same */
+        /* Your CSS remains mostly the same, but I'll include the key parts */
         :root {
             --primary-blue: #2563EB;
             --secondary-blue: #1D4ED8;
@@ -357,10 +374,10 @@ if (empty($_SESSION['user_id']) && isset($_COOKIE['remember_me'])) {
             position: relative;
         }
         
-        .brand-logo i {
-            font-size: 56px;
-            color: var(--white);
-            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+        .brand-logo img {
+            width: 175px;
+            height: 175px;
+            border-radius: 10px;
         }
         
         .brand-title {
@@ -693,8 +710,9 @@ if (empty($_SESSION['user_id']) && isset($_COOKIE['remember_me'])) {
                 margin-bottom: 20px;
             }
             
-            .brand-logo i {
-                font-size: 48px;
+            .brand-logo img {
+                width: 100px;
+                height: 100px;
             }
             
             .brand-title {
@@ -770,8 +788,8 @@ if (empty($_SESSION['user_id']) && isset($_COOKIE['remember_me'])) {
             <!-- Branding Section -->
             <div class="auth-brand">
                 <div class="brand-logo">
-    <img src="img/ttm.png" alt="TTM Logo" style="width: 175px; height: 175px;">
-</div>
+                    <img src="img/ttm.png" alt="TTM Logo">
+                </div>
                 <h1 class="brand-title">TTM</h1>
                 <p class="brand-subtitle">Traffic and Transport Management System</p>
                 
@@ -862,6 +880,7 @@ if (empty($_SESSION['user_id']) && isset($_COOKIE['remember_me'])) {
                 </p>
                 <form id="forgotPasswordForm" method="POST" action="">
                     <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+                    <input type="hidden" name="forgot_password" value="1">
                     <div class="form-group">
                         <label for="email" class="form-label">Email Address</label>
                         <input type="email" id="email" name="email" class="form-input" 
