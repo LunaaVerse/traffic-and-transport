@@ -2,52 +2,52 @@
 // Database configuration for all modules
 $databases = [
     'ttm' => [
-        'host' => 'localhost:3307',
-        'name' => 'ttm',
-        'user' => 'root',
-        'pass' => ''
+        'host' => 'localhost',
+        'name' => 'ttm_ttm',
+        'user' => 'ttm_ttm',
+        'pass' => 'Admin123'
     ],
     'avr' => [
-        'host' => 'localhost:3307',
-        'name' => 'avr',
-        'user' => 'root',
-        'pass' => ''
-    ],
-    'pats' => [
-        'host' => 'localhost:3307',
-        'name' => 'pats',
-        'user' => 'root',
-        'pass' => ''
+        'host' => 'localhost',
+        'name' => 'ttm_avr',
+        'user' => 'ttm_avr',
+        'pass' => 'Admin123'
     ],
     'pts' => [
-        'host' => 'localhost:3307',
-        'name' => 'pts',
-        'user' => 'root',
-        'pass' => ''
+        'host' => 'localhost',
+        'name' => 'ttm_pts',
+        'user' => 'ttm_pts',
+        'pass' => 'Admin123'
+    ],
+    'pt' => [
+        'host' => 'localhost', 
+        'name' => 'ttm_pt',
+        'user' => 'ttm_pt',
+        'pass' => 'Admin123'
     ],
     'rtr' => [
-        'host' => 'localhost:3307',
-        'name' => 'rtr',
-        'user' => 'root',
-        'pass' => ''
+        'host' => 'localhost',
+        'name' => 'ttm_rtr',
+        'user' => 'rottm_rtr',
+        'pass' => 'Admin123'
     ],
     'tm' => [
-        'host' => 'localhost:3307',
-        'name' => 'tm',
-        'user' => 'root',
-        'pass' => ''
+        'host' => 'localhost',
+        'name' => 'ttm_tm',
+        'user' => 'ttm_tm',
+        'pass' => 'Admin123'
     ],
     'tsc' => [
-        'host' => 'localhost:3307',
-        'name' => 'tsc',
-        'user' => 'root',
-        'pass' => ''
+        'host' => 'localhost',
+        'name' => 'ttm_tsc',
+        'user' => 'ttm_tsc',
+        'pass' => 'Admin123'
     ],
     'vrd' => [
-        'host' => 'localhost:3307',
-        'name' => 'vrd',
-        'user' => 'root',
-        'pass' => ''
+        'host' => 'localhost',
+        'name' => 'ttm_vrd',
+        'user' => 'ttm_vrd',
+        'pass' => 'Admin123'
     ]
 ];
 
@@ -76,7 +76,7 @@ function getDBConnection($dbName) {
 }
 
 // For backward compatibility
-define('DB_HOST', 'localhost:3307');
+define('DB_HOST', 'localhost');
 define('DB_NAME', 'ttm');
 define('DB_USER', 'root');
 define('DB_PASS', '');
