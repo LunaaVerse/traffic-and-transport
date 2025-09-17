@@ -3,51 +3,51 @@
 $databases = [
     'ttm' => [
         'host' => 'localhost',
-        'name' => 'ttm_ttm',
-        'user' => 'ttm_ttm',
-        'pass' => 'Admin123'
+        'name' => 'your_ttm_database',
+        'user' => 'your_database_user',
+        'pass' => 'your_database_password'
     ],
     'avr' => [
         'host' => 'localhost',
-        'name' => 'ttm_avr',
-        'user' => 'ttm_avr',
-        'pass' => 'Admin123'
+        'name' => 'your_avr_database',
+        'user' => 'your_database_user',
+        'pass' => 'your_database_password'
+    ],
+    'pats' => [
+        'host' => 'localhost',
+        'name' => 'your_pats_database',
+        'user' => 'your_database_user',
+        'pass' => 'your_database_password'
     ],
     'pts' => [
         'host' => 'localhost',
-        'name' => 'ttm_pts',
-        'user' => 'ttm_pts',
-        'pass' => 'Admin123'
-    ],
-    'pt' => [
-        'host' => 'localhost', 
-        'name' => 'ttm_pt',
-        'user' => 'ttm_pt',
-        'pass' => 'Admin123'
+        'name' => 'your_pts_database',
+        'user' => 'your_database_user',
+        'pass' => 'your_database_password'
     ],
     'rtr' => [
         'host' => 'localhost',
-        'name' => 'ttm_rtr',
-        'user' => 'ttm_rtr',
-        'pass' => 'Admin123'
+        'name' => 'your_rtr_database',
+        'user' => 'your_database_user',
+        'pass' => 'your_database_password'
     ],
     'tm' => [
         'host' => 'localhost',
-        'name' => 'ttm_tm',
-        'user' => 'ttm_tm',
-        'pass' => 'Admin123'
+        'name' => 'your_tm_database',
+        'user' => 'your_database_user',
+        'pass' => 'your_database_password'
     ],
     'tsc' => [
         'host' => 'localhost',
-        'name' => 'ttm_tsc',
-        'user' => 'ttm_tsc',
-        'pass' => 'Admin123'
+        'name' => 'your_tsc_database',
+        'user' => 'your_database_user',
+        'pass' => 'your_database_password'
     ],
     'vrd' => [
         'host' => 'localhost',
-        'name' => 'ttm_vrd',
-        'user' => 'ttm_vrd',
-        'pass' => 'Admin123'
+        'name' => 'your_vrd_database',
+        'user' => 'your_database_user',
+        'pass' => 'your_database_password'
     ]
 ];
 
@@ -69,15 +69,21 @@ function getDBConnection($dbName) {
         );
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+        $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+        
         return $pdo;
-    } catch(PDOException $e) {
-        die("ERROR: Could not connect to database '$dbName'. " . $e->getMessage());
+    } catch (PDOException $e) {
+        error_log("Database connection failed: " . $e->getMessage());
+        throw new Exception("Unable to connect to database: " . $dbName);
     }
 }
 
-// For backward compatibility
-define('DB_HOST', 'localhost');
-define('DB_NAME', 'ttm');
-define('DB_USER', 'root');
-define('DB_PASS', '');
+// Main TTM database connection (default)
+try {
+    $pdo = getDBConnection('ttm');
+} catch (Exception $e) {
+    // Log error but don't display details to users
+    error_log($e->getMessage());
+    die("Database connection error. Please try again later.");
+}
 ?>

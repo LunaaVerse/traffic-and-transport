@@ -51,20 +51,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['forgot_password'])) {
                 // Send reset email using PHPMailer
                 $mail = new PHPMailer(true);
                 try {
+                    // SMTP configuration should be set in your environment or config file
+                    // For production, use environment variables or a config file
                     $mail->isSMTP();
-                    $mail->Host = 'smtp.gmail.com';
+                    $mail->Host = getenv('SMTP_HOST') ?: 'smtp.gmail.com';
                     $mail->SMTPAuth = true;
-                    $mail->Username = 'yannabarrete@gmail.com';
-                    $mail->Password = 'cxgy dxgc elfe snau';
-                    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-                    $mail->Port = 587;
+                    $mail->Username = getenv('SMTP_USER') ?: 'your-email@domain.com';
+                    $mail->Password = getenv('SMTP_PASS') ?: 'your-app-password';
+                    $mail->SMTPSecure = defined('PHPMailer::ENCRYPTION_STARTTLS') ? PHPMailer::ENCRYPTION_STARTTLS : 'tls';
+                    $mail->Port = getenv('SMTP_PORT') ?: 587;
                     
-                    $mail->setFrom('noreply@ttm.com', 'TTM System');
+                    $mail->setFrom(getenv('SMTP_FROM_EMAIL') ?: 'noreply@yourdomain.com', getenv('SMTP_FROM_NAME') ?: 'TTM System');
                     $mail->addAddress($email, $user['full_name']);
                     
                     $mail->isHTML(true);
                     $mail->Subject = 'Password Reset Request - TTM';
-                    $resetLink = "http://" . $_SERVER['HTTP_HOST'] . "/reset_password.php?token=" . $token;
+                    $resetLink = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . $_SERVER['HTTP_HOST'] . "/reset_password.php?token=" . $token;
                     $mail->Body = "
                         <h2>Password Reset Request</h2>
                         <p>Hello {$user['full_name']},</p>
@@ -77,9 +79,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['forgot_password'])) {
                     $mail->send();
                     $forgotPasswordMessage = "Password reset link sent to your email";
                 } catch (Exception $e) {
+                    error_log("Email sending failed: " . $e->getMessage());
                     $forgotPasswordMessage = "Failed to send reset email. Please try again.";
                 }
             } else {
+                // Don't reveal if email exists for security
                 $forgotPasswordMessage = "If an account with that email exists, a reset link has been sent";
             }
         }
@@ -95,7 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
         // Sanitize and validate inputs
         $loginInput = trim($_POST['loginInput']);
         $password = $_POST['password'];
-       // $rememberMe = isset($_POST['remember']) ? true : false;
+        $rememberMe = isset($_POST['remember']) ? true : false;
         
         // Validate inputs
         if (empty($loginInput)) {
@@ -228,10 +232,10 @@ if (empty($_SESSION['user_id']) && isset($_COOKIE['remember_me'])) {
             // Check user role and redirect accordingly
             if (in_array($user['role'], ['admin', 'officer', 'operator'])) {
                 // Employee dashboard
-                header("Location: TM/dashboard.php");
+                header("Location: admin/dashboard.php");
             } else {
                 // Citizen dashboard
-                header("Location: TM/index.php");
+                header("Location: employee/index.php");
             }
             exit();
         }
@@ -252,6 +256,7 @@ if (empty($_SESSION['user_id']) && isset($_COOKIE['remember_me'])) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
+        /* Your CSS remains the same */
         :root {
             --primary-blue: #2563EB;
             --secondary-blue: #1D4ED8;
@@ -344,14 +349,12 @@ if (empty($_SESSION['user_id']) && isset($_COOKIE['remember_me'])) {
         .brand-logo {
             width: 120px;
             height: 120px;
-           
             border-radius: 24px;
             display: flex;
             align-items: center;
             justify-content: center;
             margin-bottom: 24px;
             position: relative;
-           
         }
         
         .brand-logo i {
@@ -825,13 +828,13 @@ if (empty($_SESSION['user_id']) && isset($_COOKIE['remember_me'])) {
                                placeholder="Enter your password" required>
                     </div>
                     
-              <!--       <div class="form-actions">
+                    <div class="form-actions">
                         <div class="checkbox-wrapper">
                             <input type="checkbox" id="rememberMe" name="remember">
                             <label for="rememberMe">Remember me</label>
                         </div>
                         <a href="#" id="forgotPasswordLink" class="forgot-link">Forgot password?</a>
-                    </div> -->
+                    </div>
                     
                     <button type="submit" name="login" class="btn-primary">
                         Sign In
