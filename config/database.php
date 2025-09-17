@@ -1,9 +1,9 @@
 <?php
 // Database configuration
-define('DB_HOST', 'localhost:3307');
-define('DB_NAME', 'ttm');
-define('DB_USER', 'root');
-define('DB_PASS', '');
+define('DB_HOST', 'localhost');
+define('DB_NAME', 'ttm_ttm');
+define('DB_USER', 'ttm_ttm');
+define('DB_PASS', 'Admin123S');
 
 // Create connection
 $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
