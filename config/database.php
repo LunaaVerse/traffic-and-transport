@@ -1,18 +1,21 @@
 <?php
-// Database configuration
-define('DB_HOST', 'localhost');
-define('DB_NAME', 'ttm_ttm');
-define('DB_USER', 'ttm_ttm');
-define('DB_PASS', 'Admin123');
+$host = 'localhost';
+$dbname = 'ttm_ttm';
+$username = 'ttm_ttm';
+$password = 'Admin123';
 
-// Create connection
-$conn = new mysqli(DB_HOST, DB_NAME, DB_USER, DB_PASS);
-
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+try {
+    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $username, $password);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+} catch(PDOException $e) {
+    error_log("Database connection failed: " . $e->getMessage());
+    die("Connection failed. Please try again later.");
 }
 
-// Set charset
-$conn->set_charset("utf8mb4");
+if (!function_exists('sanitizeInput')) {
+    function sanitizeInput($data) {
+        return htmlspecialchars(strip_tags(trim($data)));
+    }
+}
 ?>
