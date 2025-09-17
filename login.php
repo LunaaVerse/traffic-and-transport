@@ -6,7 +6,7 @@ session_start([
     'cookie_httponly' => true,
     'use_strict_mode' => true
 ]);
-require_once 'database.php'; // Changed from config/database.php
+require_once 'config/database.php'; // Changed from config/database.php
 require_once 'vendor/autoload.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
