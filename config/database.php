@@ -6,7 +6,7 @@ define('DB_USER', 'ttm_ttm');
 define('DB_PASS', 'Admin123');
 
 // Create connection
-$conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+$conn = new mysqli(DB_HOST, DB_NAME, DB_USER, DB_PASS);
 
 // Check connection
 if ($conn->connect_error) {
